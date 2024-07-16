@@ -1,0 +1,215 @@
+name "WaveSAVE_ver.1.01"
+
+#----------------------------#
+
+call "SaveFID",1,25000+997
+
+call "SaveFID",2,25000+998
+
+call "SaveFID",3,25000+999
+
+call "SaveFID",4,25000+1
+
+call "SaveFID",5,25000+2
+
+call "SaveFID",6,25000+3
+
+call "SaveFID",7,25000+4
+
+call "SaveFID",8,25000+5
+
+call "SaveFID",9,25000+6
+
+call "SaveFID",10,25000+7
+
+call "SaveFID",11,25000+8
+
+call "SaveFID",12,25000+9
+
+call "SaveFID",13,25000+10
+
+call "SaveFID",14,25000+11
+
+call "SaveFID",15,25000+12
+
+call "SaveFID",16,25000+13
+
+call "SaveFID",17,25000+14
+
+call "SaveFID",18,25000+15
+
+call "SaveFID",19,25000+16
+
+call "SaveFID",20,25000+17
+
+call "SaveFID",21,25000+18
+
+call "SaveFID",22,25000+19
+
+call "SaveFID",23,25000+20
+
+call "SaveFID",24,25000+21
+
+call "SaveFID",25,25000+22
+
+call "SaveFID",26,25000+23
+
+call "SaveFID",27,25000+24
+
+call "SaveFID",28,25000+25
+
+call "SaveFID",29,25000+26
+
+call "SaveFID",30,25000+27
+
+call "SaveFID",31,25000+28
+
+call "SaveFID",32,25000+29
+
+call "SaveFID",33,25000+30
+
+call "SaveFID",34,25000+31
+
+call "SaveFID",35,25000+32
+
+call "SaveFID",61,26000+997
+
+call "SaveFID",62,26000+998
+
+call "SaveFID",63,26000+999
+
+call "SaveFID",64,26000+1
+
+call "SaveFID",65,26000+2
+
+call "SaveFID",66,26000+3
+
+call "SaveFID",67,26000+4
+
+call "SaveFID",68,26000+5
+
+call "SaveFID",69,26000+6
+
+call "SaveFID",70,26000+7
+
+call "SaveFID",71,26000+8
+
+call "SaveFID",72,26000+9
+
+call "SaveFID",73,26000+10
+
+call "SaveFID",74,26000+11
+
+call "SaveFID",75,26000+12
+
+call "SaveFID",76,26000+13
+
+call "SaveFID",77,26000+14
+
+call "SaveFID",78,26000+15
+
+call "SaveFID",79,26000+16
+
+call "SaveFID",80,26000+17
+
+call "SaveFID",81,26000+18
+
+call "SaveFID",82,26000+19
+
+call "SaveFID",83,26000+20
+
+call "SaveFID",84,26000+21
+
+call "SaveFID",85,26000+22
+
+call "SaveFID",86,26000+23
+
+call "SaveFID",87,26000+24
+
+call "SaveFID",88,26000+25
+
+call "SaveFID",89,26000+26
+
+call "SaveFID",90,26000+27
+
+call "SaveFID",91,26000+28
+
+call "SaveFID",92,26000+29
+
+call "SaveFID",93,26000+30
+
+call "SaveFID",94,26000+31
+
+call "SaveFID",95,26000+32
+
+call "SaveFID",121,24000+997
+
+call "SaveFID",122,24000+998
+
+call "SaveFID",123,24000+999
+
+call "SaveFID",124,24000+1
+
+call "SaveFID",125,24000+2
+
+call "SaveFID",126,24000+3
+
+call "SaveFID",127,24000+4
+
+call "SaveFID",128,24000+5
+
+call "SaveFID",129,24000+6
+
+call "SaveFID",130,24000+7
+
+call "SaveFID",131,24000+8
+
+call "SaveFID",132,24000+9
+
+call "SaveFID",133,24000+10
+
+call "SaveFID",134,24000+11
+
+call "SaveFID",135,24000+12
+
+call "SaveFID",136,24000+13
+
+call "SaveFID",137,24000+14
+
+call "SaveFID",138,24000+15
+
+call "SaveFID",139,24000+16
+
+call "SaveFID",140,24000+17
+
+call "SaveFID",141,24000+18
+
+call "SaveFID",142,24000+19
+
+call "SaveFID",143,24000+20
+
+call "SaveFID",144,24000+21
+
+call "SaveFID",145,24000+22
+
+call "SaveFID",146,24000+23
+
+call "SaveFID",147,24000+24
+
+call "SaveFID",148,24000+25
+
+call "SaveFID",149,24000+26
+
+call "SaveFID",150,24000+27
+
+call "SaveFID",151,24000+28
+
+call "SaveFID",152,24000+29
+
+call "SaveFID",153,24000+30
+
+call "SaveFID",154,24000+31
+
+call "SaveFID",155,24000+32
+
+end

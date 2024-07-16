@@ -1,0 +1,119 @@
+name "磁場スイープ８パタパタ"
+name "積算サイクル数",va,12
+name "済サイクル数",vb,0
+name "測定中のNo.",vc,0
+name "開始磁場(T)",vd,0.7
+name "終了磁場(T)",ve,0.45
+name "磁場増加量(T)",vf,0.01
+name "現在の磁場(T)",vg,0
+name "SweepRate (T/min)",vh,0.244
+name "初期磁場",vi,0.7
+name "待ち時間",vj,50
+name "移動＋待ち時間",vk,0
+name "",vl,0
+
+#
+# 磁場スイープによるスペクトル測定を行う。
+# Last Update 2008/4/24
+#
+call "LinearPlotX:vg"
+call "LinearPlotY:real(current)"
+
+call "ClearAD"
+call "LoadPulser"
+pul.UseComb=0
+
+vc=0
+vg=vd
+
+
+#磁場を開始磁場へセット
+call "SetFieldF", vg
+#開始磁場へ到達するための時間
+vk=sqr(((vd-vi)/vh)*((vd-vi)/vh))*60
+call "Wait", vk
+
+
+loop
+
+#磁場をセット
+call "SetFieldF", vg
+#安定するまで、待機
+vk=vj+vf/vh*60
+call "Wait", vk
+
+
+vb=0
+vc=vc+1
+
+loop
+
+pul.qpsk1st=0
+pul.qpsk2nd=0
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=2
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=1
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=3
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=0
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=2
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=1
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=3
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+call "DispWave"
+vb=vb+1
+while vb<va
+call "SaveFid",vc,1000+vc
+
+call "DispLinear"
+vs=(ve-vd)/sqr((ve-vd)*(ve-vd))
+vg=vg+vs*vf
+vp=sqr((vg-vs*vf-ve)*(vg-vs*vf-ve))
+vq=vf/2
+while vp >= vq
+
+end
+
+
+#ver.1.00　とりあえず作成。上げ測定のみ。（2004/6/18）
+#ver.1.10　積算時の時間ロスを抑えるためにハードで積算に切り替える。
+#          合計積算数は「8×積算数×サイクル数」となる。（2006/1/19）
+
+#上記の歴史から新規更新
+#ver.1.00　上げ下げ（sweep）の区別を排除。

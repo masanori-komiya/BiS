@@ -1,0 +1,476 @@
+name "磁場スイープ８パタパタ"
+name "積算サイクル数",va,10
+name "済サイクル数",vb,0
+name "測定中のNo.",vc,0
+name "",vd,0
+name "",ve,0
+name "",vf,0
+name "現在の磁場(T)",vg,0
+name "SweepRate (T)",vh,0.1
+name "初期磁場",vi,0
+name "待ち時間",vj,10
+name "移動＋待ち時間",vk,0
+name "振動セットの幅",vl,0.01
+name "1開始磁場:T",vm,1.60
+name "1終了磁場:T",vn,2.00
+name "1磁場増加量:T",vo,0.04
+name "-2開始磁場:T--",vp,2.02
+name "-2終了磁場:T--",vq,2.2
+name "-2磁場増加量:T--",vr,0.02
+name "3開始磁場:T",vs,2.24
+name "3終了磁場:T",vt,2.6
+name "3磁場増加量:T",vu,0.04
+
+#
+# 磁場スイープによるスペクトル測定を行う。
+# Last Update 2008/4/24
+#
+
+
+
+call "LinearPlotX:vg"
+call "LinearPlotY:sigma(current)"
+
+call "ClearAD"
+call "LoadPulser"
+
+pul.UseComb=0
+
+
+
+
+
+
+########################################
+########### 磁場sweepセット1 ###########
+########################################
+
+##### 磁場を開始磁場へセット #####
+vy=(vn-vm)/sqr((vn-vm)*(vn-vm))
+
+#開始磁場にセットすする前の準備
+vg=vm-vy*vl
+call "SetFieldF", vg
+vk=3+sqr(((vg-vi)/vh)*((vg-vi)/vh))*60
+call "Wait", vk
+
+#開始磁場にセット
+vg=vm
+call "SetFieldF", vg
+vk=3+vl/vh*60
+call "Wait", vk
+
+
+
+vc=0
+
+loop
+
+##### 磁場振動セッティング #####
+#過程１
+vf=vg+vy*vl
+call "SetFieldF", vf
+vk=3+((vo+vl)/vh)*60
+call "Wait", vk
+#過程２
+vf=vg-vy*vl/2
+call "SetFieldF", vf
+vk=3+(3/2*vl/vh)*60
+call "Wait", vk
+#過程３
+vf=vg+vy*vl/4
+call "SetFieldF", vf
+vk=3+(3/4*vl/vh)*60
+call "Wait", vk
+#過程４
+vf=vg-vy*vl/8
+call "SetFieldF", vf
+vk=3+(3/8*vl/vh)*60
+call "Wait", vk
+#過程５
+vf=vg+vy*vl/16
+call "SetFieldF", vf
+vk=3+(3/16*vl/vh)*60
+call "Wait", vk
+#過程６
+vf=vg-vy*vl/32
+call "SetFieldF", vf
+vk=3+(3/32*vl/vh)*60
+call "Wait", vk
+#過程７
+vf=vg
+call "SetFieldF", vf
+vk=3+(1/32*vl/vh)*60
+call "Wait", vk
+
+
+
+#安定するまで、時間vj程度待つ
+vk=vj
+call "Wait", vk
+
+
+
+
+vb=0
+vc=vc+1
+
+loop
+
+pul.qpsk1st=0
+pul.qpsk2nd=0
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=2
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=1
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=3
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=0
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=2
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=1
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=3
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+vb=vb+1
+while vb<va
+
+
+call "DispLinear"
+vg=vg+vy*vo
+vd=sqr((vg-vy*vo-vn)*(vg-vy*vo-vn))
+ve=vo/2
+while vd >= ve
+
+
+
+
+
+
+
+########################################
+########### 磁場sweepセット2 ###########
+########################################
+
+##### 磁場を開始磁場へセット #####
+vy=(vq-vp)/sqr((vq-vp)*(vq-vp))
+
+#開始磁場にセットすする前の準備
+vg=vp-vy*vl
+call "SetFieldF", vg
+vk=3+sqr(((vg-vn)/vh)*((vg-vn)/vh))*60
+call "Wait", vk
+
+#開始磁場にセット
+vg=vp
+call "SetFieldF", vg
+vk=3+vl/vh*60
+call "Wait", vk
+
+
+
+
+
+loop
+
+##### 磁場振動セッティング #####
+#過程１
+vf=vg+vy*vl
+call "SetFieldF", vf
+vk=3+((vr+vl)/vh)*60
+call "Wait", vk
+#過程２
+vf=vg-vy*vl/2
+call "SetFieldF", vf
+vk=3+(3/2*vl/vh)*60
+call "Wait", vk
+#過程３
+vf=vg+vy*vl/4
+call "SetFieldF", vf
+vk=3+(3/4*vl/vh)*60
+call "Wait", vk
+#過程４
+vf=vg-vy*vl/8
+call "SetFieldF", vf
+vk=3+(3/8*vl/vh)*60
+call "Wait", vk
+#過程５
+vf=vg+vy*vl/16
+call "SetFieldF", vf
+vk=3+(3/16*vl/vh)*60
+call "Wait", vk
+#過程６
+vf=vg-vy*vl/32
+call "SetFieldF", vf
+vk=3+(3/32*vl/vh)*60
+call "Wait", vk
+#過程７
+vf=vg
+call "SetFieldF", vf
+vk=3+(1/32*vl/vh)*60
+call "Wait", vk
+
+
+
+#安定するまで、時間vj程度待つ
+vk=vj
+call "Wait", vk
+
+
+
+
+vb=0
+vc=vc+1
+
+loop
+
+pul.qpsk1st=0
+pul.qpsk2nd=0
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=2
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=1
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=3
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=0
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=2
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=1
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=3
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+vb=vb+1
+while vb<va
+
+
+call "DispLinear"
+vg=vg+vy*vr
+vd=sqr((vg-vy*vr-vq)*(vg-vy*vr-vq))
+ve=vr/2
+while vd >= ve
+
+
+
+
+
+
+
+
+########################################
+########### 磁場sweepセット3 ###########
+########################################
+
+##### 磁場を開始磁場へセット #####
+vy=(vt-vs)/sqr((vt-vs)*(vt-vs))
+
+#開始磁場にセットすする前の準備
+vg=vs-vy*vl
+call "SetFieldF", vg
+vk=3+sqr(((vg-vq)/vh)*((vg-vq)/vh))*60
+call "Wait", vk
+
+#開始磁場にセット
+vg=vs
+call "SetFieldF", vg
+vk=3+vl/vh*60
+call "Wait", vk
+
+
+
+
+
+loop
+
+##### 磁場振動セッティング #####
+#過程１
+vf=vg+vy*vl
+call "SetFieldF", vf
+vk=3+((vu+vl)/vh)*60
+call "Wait", vk
+#過程２
+vf=vg-vy*vl/2
+call "SetFieldF", vf
+vk=3+(3/2*vl/vh)*60
+call "Wait", vk
+#過程３
+vf=vg+vy*vl/4
+call "SetFieldF", vf
+vk=3+(3/4*vl/vh)*60
+call "Wait", vk
+#過程４
+vf=vg-vy*vl/8
+call "SetFieldF", vf
+vk=3+(3/8*vl/vh)*60
+call "Wait", vk
+#過程５
+vf=vg+vy*vl/16
+call "SetFieldF", vf
+vk=3+(3/16*vl/vh)*60
+call "Wait", vk
+#過程６
+vf=vg-vy*vl/32
+call "SetFieldF", vf
+vk=3+(3/32*vl/vh)*60
+call "Wait", vk
+#過程７
+vf=vg
+call "SetFieldF", vf
+vk=3+(1/32*vl/vh)*60
+call "Wait", vk
+
+
+
+#安定するまで、時間vj程度待つ
+vk=vj
+call "Wait", vk
+
+
+
+
+vb=0
+vc=vc+1
+
+loop
+
+pul.qpsk1st=0
+pul.qpsk2nd=0
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=2
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=1
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=3
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=0
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=2
+pul.qpsk2nd=2
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=1
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+pul.qpsk1st=0
+pul.qpsk2nd=3
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vc
+
+vb=vb+1
+while vb<va
+
+
+call "DispLinear"
+vg=vg+vy*vu
+vd=sqr((vg-vy*vu-vt)*(vg-vy*vu-vt))
+ve=vu/2
+while vd >= ve
+
+
+
+
+
+
+
+end
+
+
+#ver.1.00　とりあえず作成。上げ測定のみ。（2004/6/18）
+#ver.1.10　積算時の時間ロスを抑えるためにハードで積算に切り替える。
+#          合計積算数は「8×積算数×サイクル数」となる。（2006/1/19）
+
+#上記の歴史から新規更新
+#ver.1.00　上げ下げ（sweep）の区別を排除。
+#ver.1.10　上げ下げ（sweep）の区別を排除。磁場を振動セッティングに変更。
+#ver.1.11　待ち時間が無効になっていたので、修正（vk=vi => vk=vj）。
+#ver.1.20　振動磁場（７）セットを導入。

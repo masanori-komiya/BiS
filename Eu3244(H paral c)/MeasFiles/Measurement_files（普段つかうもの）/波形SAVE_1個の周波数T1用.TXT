@@ -1,0 +1,37 @@
+name "WaveSAVE_ver.1.01"
+
+#----------------------------#
+
+call "SaveFID",1,25000+997
+
+call "SaveFID",2,25000+998
+
+call "SaveFID",3,25000+999
+
+call "SaveFID",4,25000+1
+
+call "SaveFID",5,25000+2
+
+call "SaveFID",6,25000+3
+
+call "SaveFID",7,25000+4
+
+call "SaveFID",8,25000+5
+
+call "SaveFID",9,25000+6
+
+call "SaveFID",10,25000+7
+
+call "SaveFID",11,25000+8
+
+call "SaveFID",12,25000+9
+
+call "SaveFID",13,25000+10
+
+call "SaveFID",14,25000+11
+
+call "SaveFID",15,25000+12
+
+
+
+end

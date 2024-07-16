@@ -1,0 +1,107 @@
+name "QPSKパルサー(８回/１サイクル)"
+name "積算サイクル数",va,20000
+name "済サイクル数",vb,0
+name "周波数セット",vc,0
+name "周波数確認",vd,0
+name "測定番号",ve,0
+name "回数/サイクル",vf,10
+name "",vg,0
+name "",vh,0
+name "",vi,0
+name "",vj,0
+name "",vk,0
+name "アイドリング",vl,1
+
+#
+# QPSK(８回で１サイクル)で延々と打つ
+#
+
+call "ClearAD"
+call "LoadPulser"
+call "LinearPlotX:vd"
+call "LinearPlotY:real(current)"
+
+vd=vc
+call "SetFreq",vd
+
+# 初期設定 #
+vb=0
+loop
+pul.UseComb=0
+pul.qpsk1st=0
+pul.qpsk2nd=0
+	vb=vb+1
+	call "StartAD"
+	call "StartPulser"
+while vb < vl
+
+
+
+# 測定開始 #
+
+call "LoadPulser"
+
+ve=1
+vb=0
+
+loop
+vb=vb+1
+
+pul.qpsk1st=0
+pul.qpsk2nd=0
+call "StartAD",vf
+call "StartPulser",vf
+call "ReadADP",ve
+
+pul.qpsk1st=0
+pul.qpsk2nd=2
+call "StartAD",vf
+call "StartPulser",vf
+call "ReadADP",ve
+
+pul.qpsk1st=2
+pul.qpsk2nd=1
+call "StartAD",vf
+call "StartPulser",vf
+call "ReadADP",ve
+
+pul.qpsk1st=2
+pul.qpsk2nd=3
+call "StartAD",vf
+call "StartPulser",vf
+call "ReadADP",ve
+
+
+pul.qpsk1st=2
+pul.qpsk2nd=0
+call "StartAD",vf
+call "StartPulser",vf
+call "ReadADN",ve
+
+pul.qpsk1st=2
+pul.qpsk2nd=2
+call "StartAD",vf
+call "StartPulser",vf
+call "ReadADN",ve
+
+pul.qpsk1st=0
+pul.qpsk2nd=1
+call "StartAD",vf
+call "StartPulser",vf
+call "ReadADN",ve
+
+pul.qpsk1st=0
+pul.qpsk2nd=3
+call "StartAD",vf
+call "StartPulser",vf
+call "ReadADN",ve
+
+
+call "DispWave"
+
+while vb<va
+
+end
+
+#ver.001 與儀プログラムから改造。（2005/03/??)。
+#ver1.05 マイナーチェンジ（2005/10/28)。

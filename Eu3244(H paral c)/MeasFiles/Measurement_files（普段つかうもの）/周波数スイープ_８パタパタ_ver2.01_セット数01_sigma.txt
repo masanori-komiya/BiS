@@ -1,0 +1,158 @@
+name "周波数スイープ ver 2.0.1"
+name "積算サイクル数",va,20000
+name "済サイクル数",vb,0
+name "アイドリング",vc,1
+name "1初期MHz",vd,10
+name "1最後MHz",ve,10.1
+name "1増加量MHz",vf,0.02
+name "",vg,0
+name "",vh,0
+name "",vi,0
+name "",vj,0
+name "",vk,0
+name "",vl,0
+name "",vm,0
+name "",vn,0
+name "",vo,0
+name "",vp,0
+name "",vq,0
+name "",vr,0
+name "",vs,0
+name "",vt,0
+name "",vu,0
+name "",vv,0
+name "現在の周波数(MHz)",vw,0
+name "測定番号",vx,0
+
+
+
+#
+# 周波数スイープによるスペクトル測定を行う。
+# Last Update 2006/10/04
+#
+
+call "ClearAD"
+call "LoadPulser"
+call "LinearPlotX:vw"
+call "LinearPlotY:sigma(current)"
+
+
+
+# アイドリング運転前 #
+call "SetFreq",vd
+vy=0
+loop
+pul.UseComb=0
+pul.qpsk1st=0
+pul.qpsk2nd=0
+	vy=vy+1
+	call "StartAD"
+	call "StartPulser"
+while vy < vc
+
+
+
+vb=0
+loop
+
+
+
+
+
+################################
+####### 測定シーケンス１ #######
+################################
+vx=0
+vw=vd-vf
+loop
+vw=vw+vf
+
+# アイドリング周波数変更ごと #
+call "SetFreq",vw
+pul.UseComb=0
+pul.qpsk1st=0
+pul.qpsk2nd=0
+	call "StartAD"
+	call "StartPulser"
+
+
+# 本測定 #
+call "LoadPulser"
+call "SetFreq",vw
+
+
+vx=vx+1
+
+	pul.qpsk1st=0
+	pul.qpsk2nd=0
+	call "StartAD"
+	call "StartPulser"
+	call "ReadADP",vx
+	
+	pul.qpsk1st=0
+	pul.qpsk2nd=2
+	call "StartAD"
+	call "StartPulser"
+	call "ReadADP",vx
+	
+	pul.qpsk1st=2
+	pul.qpsk2nd=1
+	call "StartAD"
+	call "StartPulser"
+	call "ReadADP",vx
+	
+	pul.qpsk1st=2
+	pul.qpsk2nd=3
+	call "StartAD"
+	call "StartPulser"
+	call "ReadADP",vx
+	
+	pul.qpsk1st=2
+	pul.qpsk2nd=0
+	call "StartAD"
+	call "StartPulser"
+	call "ReadADN",vx
+	
+	pul.qpsk1st=2
+	pul.qpsk2nd=2
+	call "StartAD"
+	call "StartPulser"
+	call "ReadADN",vx
+	
+	pul.qpsk1st=0
+	pul.qpsk2nd=1
+	call "StartAD"
+	call "StartPulser"
+	call "ReadADN",vx
+	
+	pul.qpsk1st=0
+	pul.qpsk2nd=3
+	call "StartAD"
+	call "StartPulser"
+	call "ReadADN",vx
+
+call "DispLinear"
+while vw < ve-0.0001
+
+
+
+
+
+vb=vb+1
+call "DispWave"
+while vb < va
+
+end
+
+
+
+#ver.1.00 ベース安定の８回サイクルでとりあえず作成。周波数の上げ測定しかできない。（2004/5/29）
+#ver.1.01c sigmaが使えないから、realをとって、90°位相をまわしてとる形でsin,cosをとる。（2004/6/1）
+#ver.1.02 ８回サイクルで測定する形にとりあえず落ち着けた。測定開始前にベースを決めておけばOK。（2004/6/18）
+#ver.1.05 マイナーチェンジ。周波数チェンジのたびにアイドリング実行。（2005/10/30）
+#ver.1.10 忘れた
+#ver.1.20 ワンステップごとの積算回数を調整できるようにした。あと、最後周波数できっちり止まるようにした。（2006/10/04）
+#ver.1.30 アイドリングの設定を変更。運転前（回数指定可能）と運転後の周波数変換（回数は１発）を区別。（2008/07/12）
+#ver.1.35 ワンステップごとの積算回数の調整を廃止。測定セットを２個に修正。（2008/11/23)
+#ver.2.30 計測ソフトウェアバージョンアップに伴い、周波数スイープのセットのバリエーションを追加。でも動かない。（2012/01/01)
+#ver.2.03~2.06 マイナーチェンジ。NMRver6.53から使用可能。（2012/10/02)

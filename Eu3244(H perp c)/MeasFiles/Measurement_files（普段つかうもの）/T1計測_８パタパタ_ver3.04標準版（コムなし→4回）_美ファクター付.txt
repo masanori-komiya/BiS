@@ -1,0 +1,352 @@
+name "T1計測 ver.3.00"
+name "積算サイクル数",va,10000
+name "済サイクル数",vb,0
+name "希望測定点数",vc,13
+name "測定番号",vd,0
+name "コムなしの数",ve,2
+name "美ファクター",vf,1
+name "Tj初期値(mS)",vg,1
+name "Tj増加因子",vh,2
+name "",vi,0
+name "",vj,0
+name "予想Tj最終値(ms)",vk,0
+name "美ファクター境界",vl,0.5
+#
+# T1計測を行う。
+#
+#積算サイクル数 → va
+#Start_Tj → vb
+#End_Tj → vc
+#div_Tj → vd
+#波形の収録のメモリNo → ve
+#測定予定数 → vf
+#済サイクル数 → vg
+#コムなしの数 → vj
+#アイドルパルス数 → vl
+#
+
+call "LinearPlotX:pul.tj"
+call "LinearPlotY:real(current)"
+call "LogPlotX:pul.tj"
+call "LogPlotY:1-2*real(current)/(real(1)+real(2))"
+
+call "ClearAD"
+call "LoadPulser"
+
+
+######## 予想Tj最終値 #########
+vk=vg*(1+vh*(vc*(vc+1)/2-1))
+
+
+########## 試運転 ###########
+
+# 初期設定　アイドルパルス #
+pul.UseComb=0
+vd=1
+loop
+	
+	vd=vd+1
+	call "StartAD"
+	call "StartPulser"
+	
+while vd < 1
+
+#############################
+
+
+
+#############################
+######### 測定開始 ##########
+#############################
+vb=0
+
+loop
+
+# 初期設定 #
+vd=0
+call "LoadPulser"
+
+##########################################
+########## Combなしで打つ M(∞)  #########
+##########################################
+pul.UseComb=0
+pul.tj=0
+
+loop
+vd=vd+1
+########## QPSKのセット1 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=0
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット2 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=2
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット3 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=1
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット4 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=3
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット5 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=0
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット6 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=2
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット7 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=1
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット8 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=3
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+while vd < ve
+
+
+
+
+
+##########################################
+########### Tjを変化させて打つ ###########
+##########################################
+
+pul.UseComb=1
+pul.qpskcomb=0
+
+#######################################
+################# 前半#################
+#######################################
+
+vm=1
+pul.tj=(vg*1m)*(1-vh)
+
+loop
+	vd=vd+1
+	pul.tj=pul.tj+(vg*1m)*vm*vh
+
+vm=vm+1
+
+
+###############
+# T1 Recovery #
+###############
+
+########## QPSKのセット1 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=0
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット2 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=2
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット3 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=1
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット4 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=3
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット5 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=0
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット6 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=2
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット7 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=1
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット8 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=3
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+
+while vm < vc*vl*0.999
+
+
+
+
+
+#######################################
+################# 後半#################
+#######################################
+
+loop
+	vd=vd+1
+	pul.tj=pul.tj+(vg*1m)*vm*vh
+
+vm=vm+1
+
+
+###############
+# T1 Recovery #
+###############
+
+vy=0
+loop
+	vy=vy+1
+
+########## QPSKのセット1 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=0
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット2 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=2
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット3 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=1
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット4 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=3
+
+call "StartAD"
+call "StartPulser"
+call "ReadADP",vd
+
+########## QPSKのセット5 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=0
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット6 ##########
+pul.qpsk1st=2
+pul.qpsk2nd=2
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット7 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=1
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+########## QPSKのセット8 ##########
+pul.qpsk1st=0
+pul.qpsk2nd=3
+
+call "StartAD"
+call "StartPulser"
+call "ReadADN",vd
+
+
+while vy < vf
+while vm < vc*1.001
+
+
+
+
+
+call "DispWave"
+call "DispLinear"
+call "DispLog"
+
+vb=vb+1
+
+While vb < va
+
+
+end
+
+
+## 注意事項が多いので、以下を目に通しておくこと。##
+#ver.3.00-01　Tj設定の仕方が、これまでのバージョンとはまったく異なるコンセプト。（2010/07/26）
+#ver.3.00-02　Tj増加因子「vh」によって、測定点数の密度が決まる。vhを大きくすると、Tj間隔が大きくなる。（2010/07/26）
+#ver.3.00-03　Tj初期値は、何もわからなければ、予想最終Tj値の1/300ぐらいで。（2010/07/26）
+#ver.3.00-04　Tj初期値を以上の1/300程度にセットした場合、Tj増加因子を１にすれば、希望測定点数vcは24程度。（2010/07/26）
+#ver.3.00-05　結局、Tj最終値を一定にした場合、Tj増加因子「vh」を大きくすると、ルートで測定点数が減っていく。例(vh,vc) = (0.5,35)、(1,24)、(2,17)。（2010/07/26）
+#ver.3.00-06　スピン拡散防止パルス数は、「vn」で設定。（2010/07/26）
